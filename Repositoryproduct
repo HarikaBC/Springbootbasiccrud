@@ -1,0 +1,9 @@
+package catalog.first.springboot1.repository;
+
+
+import catalog.first.springboot1.entity.Product;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ProductR extends JpaRepository<Product,Integer> {
+    Product findByName(String name);
+}
