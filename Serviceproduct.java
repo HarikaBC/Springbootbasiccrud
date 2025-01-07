@@ -25,8 +25,19 @@ public class ProductService {
     }
 
     public Product getProductById(int id) {
-        return repository.findById(id).orElse(null);
+    // First, we attempt to retrieve the product using its ID
+        
+    Optional<Product> optionalProduct = repository.findById(id);
+    
+    // Now, we check if the product was found
+    if (optionalProduct.isPresent()) {
+    // If the product exists, return it
+        return optionalProduct.get();
+    } else {
+        // If the product wasn't found, return null
+        return null;
     }
+}
 
     public Product getProductByName(String name) {
         return repository.findByName(name);
@@ -41,19 +52,23 @@ public class ProductService {
         return "product removed !! " + id;
     }
 
-    public Product updateProduct(Product products) {
-        Product existingProduct;
-        existingProduct = repository.findById(product.getId()).orElse(null);
+    Product foundProduct = repository.findById(product.getId()).orElse(null);
 
-        assert existingProduct != null;
-        existingProduct.setName(products.getName());
-        existingProduct.setQuantity(products.getQuantity());
-        existingProduct.setPrice(products.getPrice());
-        existingProduct.setBrand(products.getBrand());
-        existingProduct.setCategory(products.getCategory());
-        return repository.save(existingProducts);
-
+    //  Check if the product exists
+    if (foundProduct == null) {
+// If the product is not found, return null or handle as needed (e.g., throw an exception)
+        return null;
     }
 
+    //  Update the product details with the new data
+    foundProduct.setName(product.getName());
+    foundProduct.setQuantity(product.getQuantity());
+    foundProduct.setPrice(product.getPrice());
+    foundProduct.setBrand(product.getBrand());
+    foundProduct.setCategory(product.getCategory());
+
+    //  Save the updated product back to the repository
+    return repository.save(foundProduct);
+}
 
 }
